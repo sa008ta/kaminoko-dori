@@ -634,8 +634,54 @@ function showResult() {
   $('resultBest').textContent = b > prev ? '自己ベスト更新！' : '自己ベスト： ' + prev + '人抜き';
   const sb = $('shareBtn');
   sb.href = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent('⚽『神の子ドリブル』で' + b + '人抜き！\n\n#神の子ドリブル #ブラウザゲーム\n\nhttps://sa008ta.github.io/kaminoko-dori/');
+  shareImgData = { text: '⚽『神の子ドリブル』で' + b + '人抜き！\n\n#神の子ドリブル #ブラウザゲーム #インディーゲーム\n\nhttps://sa008ta.github.io/kaminoko-dori/', title: '神の子ドリブル', lines: [b + '人抜き！', overReason()] };
   $('result').classList.remove('hidden');
 }
+
+/* ---------- result share with a square image ---------- */
+let shareImgData = null;
+function buildShareImage(cb) {
+  const d = shareImgData;
+  if (!d || !window.R3D || !R3D.snapshot) { cb(null); return; }
+  const snap = R3D.snapshot();
+  if (!snap) { cb(null); return; }
+  const img = new Image();
+  img.onload = () => {
+    try {
+      const S = 1080, out = document.createElement('canvas'); out.width = S; out.height = S;
+      const c = out.getContext('2d');
+      const sc = Math.max(S / img.width, S / img.height);
+      const w = img.width * sc, h = img.height * sc;
+      c.drawImage(img, (S - w) / 2, (S - h) / 2, w, h);
+      const grd = c.createLinearGradient(0, S * 0.5, 0, S);
+      grd.addColorStop(0, 'rgba(8,14,6,0)'); grd.addColorStop(0.45, 'rgba(8,14,6,0.8)'); grd.addColorStop(1, 'rgba(8,14,6,0.94)');
+      c.fillStyle = grd; c.fillRect(0, S * 0.5, S, S * 0.5);
+      c.textAlign = 'center';
+      c.fillStyle = '#ffd94d'; c.font = '900 56px sans-serif';
+      c.fillText(d.title, S / 2, S * 0.665);
+      c.fillStyle = '#ffffff';
+      d.lines.forEach((ln, i) => { c.font = (i === 0 ? '900 62px' : '700 46px') + ' sans-serif'; c.fillText(ln, S / 2, S * 0.665 + 88 + i * 68); });
+      out.toBlob(b => cb(b), 'image/png');
+    } catch (e) { cb(null); }
+  };
+  img.onerror = () => cb(null);
+  img.src = snap;
+}
+function hookShareImage(anchor) {
+  if (!anchor) return;
+  anchor.addEventListener('click', e => {
+    if (!shareImgData) return;
+    let ok = false;
+    try { ok = !!(navigator.canShare && navigator.canShare({ files: [new File([], 'p.png', { type: 'image/png' })] })); } catch (err) {}
+    if (!ok) return;
+    e.preventDefault();
+    buildShareImage(blob => {
+      if (!blob) { const t = document.createElement('a'); t.href = anchor.href; t.target = '_blank'; t.rel = 'noopener'; document.body.appendChild(t); t.click(); t.remove(); return; }
+      navigator.share({ files: [new File([blob], 'result.png', { type: 'image/png' })], text: shareImgData.text }).catch(() => {});
+    });
+  });
+}
+hookShareImage($('shareBtn'));
 
 /* ================= names / NG filter ================= */
 const NG_WORDS = [
@@ -955,7 +1001,7 @@ import * as THREE from 'three';
 
 /* ============ 3D scene: dribble game ============ */
 const wrap = document.getElementById('gameWrap');
-const renderer = new THREE.WebGLRenderer({ antialias: true });
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
 renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
 wrap.appendChild(renderer.domElement);
 const scene = new THREE.Scene();
@@ -1731,7 +1777,7 @@ function frame(s) {
   renderer.render(scene, camera);
 }
 
-window.R3D = { frame, setStage, reset, resize };
+window.R3D = { frame, setStage, reset, resize, snapshot: () => { try { return renderer.domElement.toDataURL('image/png'); } catch (e) { return null; } } };
 </script>
 </body>
 </html>

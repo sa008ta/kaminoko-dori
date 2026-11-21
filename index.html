@@ -253,7 +253,7 @@ function spawnOpp(forceType, xOff, dir) {
   G.opps.push({
     id: oppSeq++, type, vet, x, z, sx: 0, sz: 0, lx: 0, lz: 0, dir: d,
     hx: (G.px - x) / hl, hz: (G.pz - z) / hl,
-    chase: (type === 'dog' ? 8.6 : type === 'cat' ? 8.2 : type === 'ele' ? 4.2 : type === 'keeper' ? 6.2 : 7 + Math.random() * 2.2) + Math.min(2.5, b * 0.03) + (vet ? 0.9 : 0),
+    chase: (type === 'dog' ? 8.1 : type === 'cat' ? 8.2 : type === 'ele' ? 4.2 : type === 'keeper' ? 6.2 : 7 + Math.random() * 2.2) + Math.min(2.5, b * 0.03) + (vet ? 0.9 : 0),
     kit: vet ? 'black' : type === 'leap' ? 'orange' : type === 'dive' ? 'red' : type === 'slide' ? 'blue' : type === 'dash' ? 'yellow' : 'gray', // colour-coded by what they do
     gunCd: 1.5 + Math.random() * 2, // veterans only: time until they stop, aim and shoot
     catch: 2.2 + Math.random() * 1.6, // back chasers close at a readable pace, not a sprint
@@ -477,7 +477,7 @@ function tick(dt) {
       let spd = o.chase;
       // anyone stuck behind your line gets the catch-up sprint, whatever direction they came from:
       // the scroll drift otherwise outruns a diagonal approach and they can never reach you
-      if (o.type === 'dog') spd = Math.max(spd, ws * 0.72 + o.catch + 1.0); // only the dog sprints; nobody tracks from behind
+      if (o.type === 'dog') spd = Math.max(spd, ws * 0.58 + o.catch + 0.5); // only the dog sprints; nobody tracks from behind (nerfed 2026-11-21: was ws*0.72 + catch + 1.0 — it scaled with the player's boost, so a chop touch could never shake it)
       o.x = clamp(o.x + o.hx * spd * dt, -11, 11);
       o.z += o.hz * spd * dt + ws * 0.72 * dt;
       }

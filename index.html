@@ -67,6 +67,8 @@
   #feints { position:absolute; right:10px; bottom:calc(60px + env(safe-area-inset-bottom)); z-index:6; display:flex; flex-direction:column; gap:8px; width:126px; }
   .feintBtn { width:100%; padding:13px 4px; font-size:13.5px; border-radius:16px; background:rgba(29,111,184,.36); box-shadow:0 3px 0 rgba(17,74,125,.32); position:relative; }
   .feintBtn small { display:block; font-size:10px; font-weight:normal; opacity:.85; margin-top:1px; }
+  .keyCap { display:none; position:absolute; top:5px; right:7px; font-size:10px; font-weight:700; line-height:1; padding:3px 5px; border:1px solid rgba(255,255,255,.75); border-bottom-width:2px; border-radius:5px; background:rgba(255,255,255,.18); color:#fff; }
+  @media (min-width: 1024px) { .keyCap { display:block; } }
   .feintBtn.cd { filter:grayscale(.7); opacity:.72; }
   #result { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:min(92vw,400px); background:#fff; border-radius:16px; box-shadow:0 6px 24px rgba(0,0,0,.3); padding:18px; z-index:8; text-align:center; }
   #result .big { font-size:21px; font-weight:bold; margin:4px 0 2px; }
@@ -106,9 +108,9 @@
   </div>
   <div class="legend">
     <b>フェイント</b><br>
-    ダブルタッチ：横に切り返して一気に抜く<br>
-    チョップタッチ：前に蹴り出して加速（真正面の敵にはぶつかる）<br>
-    ヒールリフト：跳んで低いスライディングをかわす<br>
+    ダブルタッチ：横に切り返して一気に抜く（Jキー）<br>
+    チョップタッチ：前に蹴り出して加速（真正面の敵にはぶつかる）（Kキー）<br>
+    ヒールリフト：跳んで低いスライディングをかわす（Lキー）<br>
     <b>相手の色</b><br>
     <span class="dot" style="background:#8a8f98"></span>グレー 追うだけ<span class="dot" style="background:#2456d8"></span>青 スライディング<span class="dot" style="background:#d23b2e"></span>赤 ダイビングヘッド<br>
     <span class="dot" style="background:#f07d18"></span>オレンジ 空中タックル<span class="dot" style="background:#f5c81e"></span>黄 突進<span class="dot" style="background:#222228"></span>黒 銃で撃ってくる
@@ -140,9 +142,9 @@
   <div id="feintFlash" class="hidden"></div>
   <div id="stickBase" class="hidden"><div id="stickKnob"></div></div>
   <div id="feints">
-    <button class="feintBtn" id="feintDt">ダブルタッチ<small>一気に抜く</small></button>
-    <button class="feintBtn" id="feintCt">チョップタッチ<small>蹴り出して加速</small></button>
-    <button class="feintBtn" id="feintHop">ヒールリフト<small>スライディングをかわす</small></button>
+    <button class="feintBtn" id="feintDt">ダブルタッチ<small>一気に抜く</small><span class="keyCap">J</span></button>
+    <button class="feintBtn" id="feintCt">チョップタッチ<small>蹴り出して加速</small><span class="keyCap">K</span></button>
+    <button class="feintBtn" id="feintHop">ヒールリフト<small>スライディングをかわす</small><span class="keyCap">L</span></button>
   </div>
   <div id="result" class="hidden">
     <div class="big" id="resultTitle">ファンにボールを奪われた</div>
@@ -995,7 +997,7 @@ window.addEventListener('keydown', e => {
   else if (e.key === 'ArrowDown') G.tz = clamp(G.tz + step * 0.5, -3.5, 5);
   else if (e.key === 'j' || e.key === 'J') feintDt();
   else if (e.key === 'k' || e.key === 'K') chopTouch();
-  else if (e.key === ' ') { e.preventDefault(); heelLift(); }
+  else if (e.key === 'l' || e.key === 'L') heelLift();
 });
 syncBestLine();
 </script>

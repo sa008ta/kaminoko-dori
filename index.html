@@ -149,7 +149,7 @@
     <div><span class="num" id="resultNum">0</span> 人抜き</div>
     <div class="bestLine" id="resultBest"></div>
     <div class="row">
-      <button class="ghost" id="saveImgBtn">📷 画像保存</button>
+      <button class="ghost" id="imgShareBtn">📷 画像つきで𝕏に共有</button>
       <a id="shareBtn" href="#" target="_blank" rel="noopener">𝕏で共有</a>
       <button id="againBtn">もう一回</button>
       <button class="ghost" id="homeBtn">タイトルへ</button>
@@ -668,18 +668,22 @@ function buildShareImage(cb) {
   img.onerror = () => cb(null);
   img.src = snap;
 }
-function wireSaveImg() {
-  const b = $('saveImgBtn');
+function wireImgShare() {
+  const b = $('imgShareBtn');
   if (!b) return;
   b.addEventListener('click', () => {
     if (!shareImgData) return;
+    const openIntent = () => { const s = $('shareBtn'); if (!s) return; const t = document.createElement('a'); t.href = s.href; t.target = '_blank'; t.rel = 'noopener'; document.body.appendChild(t); t.click(); t.remove(); };
     buildShareImage(blob => {
-      if (!blob) return;
-      try { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'result.png'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 5000); } catch (e) {}
+      if (blob && navigator.share) {
+        const data = { files: [new File([blob], 'result.png', { type: 'image/png' })], text: shareImgData.text };
+        if (!navigator.canShare || navigator.canShare(data)) { navigator.share(data).catch(() => {}); return; }
+      }
+      openIntent();
     });
   });
 }
-wireSaveImg();
+wireImgShare();
 
 /* ================= names / NG filter ================= */
 const NG_WORDS = [

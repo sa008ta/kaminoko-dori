@@ -723,9 +723,9 @@ $('userNameInput').value = store.get('dribble_username') || '';
 $('userNameInput').addEventListener('change', () => store.set('dribble_username', getUserName() === 'NONAME' ? '' : getUserName()));
 
 /* ================= world ranking (Google Forms + Sheets, append-only) ================= */
-const SC_FORM = 'https://docs.google.com/forms/d/e/1FAIpQLSdR0Ng0Vv_pQfOwJog02q1fEfY86YzH4wGAlvhyWm4_jpCf3g/formResponse';
-const SC_ENT = { user: 'entry.779184748', score: 'entry.353715280', pid: 'entry.433612828', date: 'entry.1730414581' };
-const SC_SHEET = '1aY1hjJ2-YzJODyQGG6T63cE25XfJNzmbiVX6VRzYUA8';
+const SC_FORM = 'https://docs.google.com/forms/d/e/1FAIpQLSdphjnQPhICbld1Wc_HC9GwUNmApkjJ0JAYdPwhFlXvwiKlLQ/formResponse';
+const SC_ENT = { user: 'entry.1193277973', score: 'entry.1128095836', pid: 'entry.1840963615', date: 'entry.674389316' };
+const SC_SHEET = '1c7xVXa5N__-ufglRQGpvQ--EMQ3kR6d6MxxOl5qrlNk';
 async function formPost(url, ent, obj) {
   const body = new URLSearchParams();
   for (const k of Object.keys(ent)) body.set(ent[k], obj[k] == null ? '' : String(obj[k]));

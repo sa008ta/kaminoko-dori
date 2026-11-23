@@ -729,7 +729,7 @@ const SC_SHEET = '1c7xVXa5N__-ufglRQGpvQ--EMQ3kR6d6MxxOl5qrlNk';
 async function formPost(url, ent, obj) {
   const body = new URLSearchParams();
   for (const k of Object.keys(ent)) body.set(ent[k], obj[k] == null ? '' : String(obj[k]));
-  await fetch(url, { method: 'POST', mode: 'no-cors', body });
+  await fetch(url, { method: 'POST', mode: 'no-cors', body, keepalive: true });
 }
 async function sheetLoad(id) {
   const r = await fetch('https://docs.google.com/spreadsheets/d/' + id + '/gviz/tq?tqx=out:json&_=' + Date.now());
@@ -767,6 +767,8 @@ async function openRanking() {
       ? world.map((r, i) => (i + 1) + '位　' + r.user + ' — ' + r.score + '人').join('<br>')
       : 'まだ記録がありません';
     const mine = byPid.get(playerId());
+    const localBest = best();
+    if (localBest > 0 && (!mine || mine.score < localBest)) submitScore(localBest); // 送信ロスト時の再送（シート照合）
     const mb = Math.max(best(), mine ? mine.score : 0);
     $('myBestLine').textContent = mb > 0 ? '自分のベスト： ' + mb + '人抜き' : '';
   } catch (e) {

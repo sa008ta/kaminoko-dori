@@ -14,6 +14,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>神の子ドリブル</title>
 <style>
+  html, body { user-select:none; -webkit-user-select:none; -webkit-touch-callout:none; }
+  input, textarea { user-select:text; -webkit-user-select:text; }
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html, body { height:100%; }
   body { font-family:"Hiragino Maru Gothic ProN","Hiragino Sans","Noto Sans JP",sans-serif; background-image:linear-gradient(180deg, rgba(255,255,255,.10), rgba(0,0,0,.24)), repeating-linear-gradient(90deg, #2e7d3f 0 72px, #267138 72px 144px); background-attachment:fixed; color:#234; overflow:hidden; height:100dvh; display:flex; align-items:center; justify-content:center; }
@@ -723,9 +725,9 @@ $('userNameInput').value = store.get('dribble_username') || '';
 $('userNameInput').addEventListener('change', () => store.set('dribble_username', getUserName() === 'NONAME' ? '' : getUserName()));
 
 /* ================= world ranking (Google Forms + Sheets, append-only) ================= */
-const SC_FORM = 'https://docs.google.com/forms/d/e/1FAIpQLSdphjnQPhICbld1Wc_HC9GwUNmApkjJ0JAYdPwhFlXvwiKlLQ/formResponse';
-const SC_ENT = { user: 'entry.1193277973', score: 'entry.1128095836', pid: 'entry.1840963615', date: 'entry.674389316' };
-const SC_SHEET = '1c7xVXa5N__-ufglRQGpvQ--EMQ3kR6d6MxxOl5qrlNk';
+const SC_FORM = 'https://docs.google.com/forms/d/e/1FAIpQLScW06WzoOMdY_YuzOXNywazvQBl9K-3S9fJWQn1xyP0aXqXKQ/formResponse';
+const SC_ENT = { user: 'entry.1021042837', score: 'entry.792622523', pid: 'entry.162522887', date: 'entry.88841796' };
+const SC_SHEET = '1oNa9sJNYkKRprv-UUhYCfUW46I1I3jdfMb13AlDnIxM';
 async function formPost(url, ent, obj) {
   const body = new URLSearchParams();
   for (const k of Object.keys(ent)) body.set(ent[k], obj[k] == null ? '' : String(obj[k]));
